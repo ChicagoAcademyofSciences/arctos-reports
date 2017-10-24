@@ -1,52 +1,14 @@
 SELECT
-    collection_id,
-    scientific_name,
-    cat_num,
-    identification_remarks,
-    ACCESSION,
-    higher_geog,
-    SPEC_LOCALITY,
-    decode(replace(higher_geog,'North America, United States','USA'),'no higher geography recorded','',replace(higher_geog,'North America, United States','USA'))||decode(replace(spec_locality,'no specific locality recorded'),NULL,NULL,', ' || spec_locality) locstring,
-
-    flat.VERBATIM_LOCALITY,
-    flat.COLLECTING_METHOD,
-    flat.COLLECTING_SOURCE,
-    VERBATIM_DATE,
-    BEGAN_DATE,
-    COLLECTORS,
-    SEX,
-    AGE_CLASS,
-    ATTRIBUTES,
-    PREPARATORS,
-    PARTS,
-    REMARKS,
-    MINIMUM_ELEVATION,
-    MAXIMUM_ELEVATION,
-    ORIG_ELEV_UNITS,
-    round(dec_lat,5) dec_lat,
-    round(dec_long,5) dec_long,
-    COORDINATEUNCERTAINTYINMETERS,
-    DATUM,
-    ConcatAttributevalue(flat.collection_object_id,'verbatim preservation date') as verbatim_preservation_date,
-    ConcatAttributevalue(flat.collection_object_id,'age') as age,
-    ConcatAttributevalue(flat.collection_object_id,'unformatted measurements') as unformatted_measurements,
-    ConcatAttributevalue(flat.collection_object_id,'reproductive data') as reproductive_data,
-    ConcatAttributevalue(flat.collection_object_id,'molt condition') as molt_condition,
-    ConcatAttributevalue(flat.collection_object_id,'total length') as total_length,
-    ConcatAttributevalue(flat.collection_object_id,'wing chord') as wing_chord,
-    ConcatAttributevalue(flat.collection_object_id,'weight') as weight,
-    ConcatAttributevalue(flat.collection_object_id,'fat deposition') as fat_deposition,
-    ConcatAttributevalue(flat.collection_object_id,'stomach contents') as stomach_contents,
-    ConcatAttributevalue(flat.collection_object_id,'extension') as extension,
-    ConcatAttributevalue(flat.collection_object_id,'skull ossification') as skull_ossification,
-    ConcatAttributevalue(flat.collection_object_id,'gonad') as gonad,
-    concatsingleotherid(flat.collection_object_id,'collector number') as collector_number,
-    concatsingleotherid(flat.collection_object_id,'original identifier') as original_identifier,
-    concatsingleotherid(flat.collection_object_id,'secondary identifier') as secondary_identifier,
-    concatsingleotherid(flat.collection_object_id,'DZTB: Denver Zoology Tissue Bird') as DZTB,
-    concatsingleotherid(flat.collection_object_id,'collector number') as collector_number,
-    habitat
+  scientific_name,
+  DECODE(CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'),NULL,collectors,(collectors || '; ' || CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'))) collectors_numbers,
+  NVL(SUBSTR(identification_remarks, 0, INSTR(identification_remarks, '.')-1),identification_remarks) common_name,
+  DECODE(age_class,NULL,DECODE(sex,'female',sex,'male',sex,''),(DECODE(sex,'female',(age_class || ', female'),'male',(age_class || ', male'),''))) age_sex,
+  DECODE(collection_id,'124','BOT-','130','ENTO-','126','FISH-','131','MALA-','113','MAM-','114','ORN-','115','OOL-','144','TEACH-') || cat_num formatted_cat_num,
+  DECODE(verbatim_date, '[no date recorded]', NULL, REPLACE(verbatim_date,'[transcribed directly into formatted date fields]',began_date)) collecting_date,
+  TRIM(TRIM(leading ',' FROM DECODE(higher_geog,'no higher geography recorded',NULL, REPLACE(higher_geog,'North America, United States','USA')) || DECODE(REPLACE(spec_locality,'no specific locality recorded'),NULL,'',', ' || spec_locality))) locstring
 FROM
-    flat
-WHERE  flat.collection_object_id IN (#collection_object_id#)
-ORDER BY cat_num
+  flat
+WHERE
+  flat.collection_object_id IN (#collection_object_id#)
+ORDER BY
+  formatted_cat_num
