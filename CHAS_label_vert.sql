@@ -1,3 +1,5 @@
+-- This is used in CHAS_label_vert, CHAS_label_vertLongNames, CHAS_label_exhibit
+
 SELECT
   scientific_name,
   DECODE(CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'),NULL,collectors,(collectors || '; ' || CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'))) collectors_numbers,
