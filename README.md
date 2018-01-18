@@ -8,3 +8,5 @@ The unpaired .sql files (e.g. *cataloged-items-count.sql*) are SQL snippets that
 The [/img](/img) directory contains images to use for the thumbnail when uploading a PDF condition report to a specimen record, as well as a copy of our logo. Erica never figured out how to embed an image into a Coldfusion Report Builder template, e.g. the CAS/PNNM logo on our loan report.
 
 [Issues for this repository](https://github.com/ChicagoAcademyofSciences/arctos-reports/issues) are a to-do list of what needs to be done related to reporting in Arctos.
+
+The [wiki](https://github.com/ChicagoAcademyofSciences/arctos-reports/wiki) for this repository includes a few notes about working with Coldfusion Report Builder.
