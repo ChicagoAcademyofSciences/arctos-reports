@@ -6,3 +6,5 @@ The paired .cfr +.sql files (e.g. *CHAS_label_vert.cfr* + *CHAS_label_vert.sql*)
 The unpaired .sql files (e.g. *cataloged-items-count.sql*) are SQL snippets that you can copy and paste into the “[Write SQL](http://arctos.database.museum/tools/userSQL.cfm)” tool to get useful information that may be difficult or impossible to find via the main Arctos search interface.
 
 The [/img](/img) directory contains images to use for the thumbnail when uploading a PDF condition report to a specimen record, as well as a copy of our logo. Erica never figured out how to embed an image into a Coldfusion Report Builder template, e.g. the CAS/PNNM logo on our loan report.
+
+[Issues for this repository](https://github.com/ChicagoAcademyofSciences/arctos-reports/issues) are a to-do list of what needs to be done related to reporting in Arctos.
