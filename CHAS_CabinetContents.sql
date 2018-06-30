@@ -1,6 +1,6 @@
--- This is used in CHAS_PartStorageLoc and CHAS_PartStorageLoc_2
-
 SELECT
+   flat.phylorder,
+   flat.family,
    flat.scientific_name,
    specimen_part.part_name,
    specimenPartCollObject.coll_obj_disposition disposition,
@@ -11,6 +11,8 @@ SELECT
    NVL(SUBSTR(flat.identification_remarks, 0, INSTR(flat.identification_remarks, '.')-1),flat.identification_remarks) common_name,
    TRIM(TRIM(leading ',' FROM DECODE(flat.higher_geog,'no higher geography recorded',NULL, REPLACE(flat.higher_geog,'North America, United States','USA')) || DECODE(REPLACE(flat.spec_locality,'no specific locality recorded'),NULL,'',', ' || flat.spec_locality))) locstring,
    DECODE(CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'),NULL,flat.collectors,(flat.collectors || '; ' || CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'))) collectors_numbers
+
+
 FROM
    flat,
    specimen_part,
