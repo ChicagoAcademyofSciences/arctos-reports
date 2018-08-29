@@ -21,4 +21,4 @@ WHERE
   flat.collection_object_id=specimen_part.derived_from_cat_item (+) AND
   specimen_part.collection_object_id=specimenPartCollObject.collection_object_id (+) AND
   specimen_part.collection_object_id=specimen_part_attribute.collection_object_id (+)
-ORDER BY family, scientific_name, formatted_cat_num, part_name, location
+ORDER BY location, family, scientific_name, formatted_cat_num, part_name
