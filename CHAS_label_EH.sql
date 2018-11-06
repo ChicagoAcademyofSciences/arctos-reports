@@ -1,23 +1,75 @@
+-- This is used in CHAS_label_EH.cfr
+
 SELECT
-  flat.scientific_name,
-  specimen_part.part_name,
-  specimenPartCollObject.coll_obj_disposition disposition,
-  specimenPartCollObject.condition condition,
-  specimenPartCollObject.lot_count lot_count,
-  specimen_part_attribute.attribute_value location,
-  NVL(SUBSTR(flat.identification_remarks, 0, INSTR(flat.identification_remarks, '.')-1),flat.identification_remarks) common_name,
-  TRIM(TRIM(leading ',' FROM DECODE(flat.higher_geog,'no higher geography recorded',NULL, REPLACE(flat.higher_geog,'North America, United States','USA')) || DECODE(REPLACE(flat.spec_locality,'no specific locality recorded'),NULL,'',', ' || flat.spec_locality))) locstring,
-  DECODE(CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'),NULL,flat.collectors,(flat.collectors || '; ' || CONCATSINGLEOTHERID(flat.collection_object_id,'collector number'))) collectors_numbers,
-  DECODE(specimen_part_attribute.description,'Model','MODEL-',) || flat.cat_num formatted_cat_num
+  replace(scientific_name, '-',', ') scientific_name,
+  kingdom,
+  collectors,
+  concatCollectorAgent(flat.collection_object_id,'maker') as maker,
+  higher_geog,
+  spec_locality,
+  began_date,
+  decode(began_date,
+    '1800','unknown',
+    '1800-01-01','unknown',
+    began_date) b_date,
+  ended_date,
+  replace(replace(verbatim_date,'[',''),']','') verbatim_date,
+  concatsingleotherid(flat.collection_object_id,'preparator number') as preparator_number,
+  concatsingleotherid(flat.collection_object_id,'original identifier') as original_identifier,
+  concatsingleotherid(flat.collection_object_id,'secondary identifier') as secondary_identifier,
+  concatsingleotherid(flat.collection_object_id,'collector number') as collector_number,
+  NVL(SUBSTR(identification_remarks, 0, INSTR(identification_remarks, '.')-1),identification_remarks) common_name,
+  DECODE(collection_id,
+    '132','EH-',
+    '144','TEACH-'
+  ) || cat_num formatted_cat_num,
+
+  decode(lower(substr(ConcatAttributevalue(flat.collection_object_id,'description'),0,5)),
+    'anthr','anthropology',
+    'scien','scientific history',
+    'model','model',
+    'TEST') obj_type,
+
+  ConcatAttributevalue(flat.collection_object_id,'culture of origin') as orig_cult
+
 FROM
-  flat,
-  specimen_part,
-  specimen_part_attribute,
-  coll_object specimenPartCollObject
+  flat
 WHERE
-  flat.collection_object_id IN (#collection_object_id#) AND
-  flat.collection_object_id=specimen_part.derived_from_cat_item (+) AND
-  specimen_part.collection_object_id=specimenPartCollObject.collection_object_id (+) AND
-  specimen_part.collection_object_id=specimen_part_attribute.collection_object_id (+)
+  flat.collection_object_id IN (#collection_object_id#)
 ORDER BY
   formatted_cat_num
+
+
+  SELECT
+    scientific_name,
+    collectors,
+    concatCollectorAgent(flat.collection_object_id,'maker') as maker,
+    higher_geog,
+    spec_locality,
+    began_date,
+    decode(began_date,
+      '1800','unknown',
+      '1800-01-01','unknown',
+      began_date) b_date,
+    ended_date,
+    replace(replace(verbatim_date,'[',''),']','') verbatim_date,
+    concatsingleotherid(flat.collection_object_id,'preparator number') as preparator_number,
+    concatsingleotherid(flat.collection_object_id,'original identifier') as original_identifier,
+    concatsingleotherid(flat.collection_object_id,'secondary identifier') as secondary_identifier,
+    concatsingleotherid(flat.collection_object_id,'collector number') as collector_number,
+    NVL(SUBSTR(identification_remarks, 0, INSTR(identification_remarks, '.')-1),identification_remarks) common_name,
+    DECODE(collection_id,
+      '132','EH-',
+      '144','TEACH-'
+    ) || cat_num formatted_cat_num,
+    lower(nvl(SUBSTR(ConcatAttributevalue(flat.collection_object_id,'description'), 0, INSTR(ConcatAttributevalue(flat.collection_object_id,'description'), 'anthropology:')-1),
+      nvl(SUBSTR(ConcatAttributevalue(flat.collection_object_id,'description'), 0, INSTR(ConcatAttributevalue(flat.collection_object_id,'description'), '.')-1),'')
+    )) obj_type,
+    ConcatAttributevalue(flat.collection_object_id,'culture of origin') as orig_cult
+
+  FROM
+    flat
+  WHERE
+    flat.collection_object_id IN (#collection_object_id#)
+  ORDER BY
+    formatted_cat_num
