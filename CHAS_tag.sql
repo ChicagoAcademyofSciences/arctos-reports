@@ -1,3 +1,5 @@
+--use for CHAS_tag_front.cfr and CHAS_tag_back.cfr
+
 SELECT * FROM (
   SELECT
       scientific_name,
@@ -133,7 +135,7 @@ SELECT * FROM (
       WHERE rownum <= 28
     ) WHERE  rnum > 14
 
-          
+
 
 
     IIF(
