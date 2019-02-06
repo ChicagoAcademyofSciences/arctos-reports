@@ -9,7 +9,7 @@ FROM
 WHERE
   loan.transaction_id = trans.transaction_id AND
   trans.transaction_id = inside_contact.transaction_id (+) AND
-  loan.transaction_id=#transaction_id#
+  loan.transaction_id=21120949
 */
 
 --Current loan header used by CHAS. The get_loan pre-function should not be used; it makes the header disfunctional.
@@ -30,7 +30,7 @@ LEFT JOIN
     LEFT JOIN trans_agent ON trans.transaction_id = trans_agent.transaction_id
     LEFT JOIN agent ON trans_agent.agent_id = agent.agent_id
     LEFT JOIN address ON agent.agent_id = address.agent_id
-    WHERE loan.transaction_id = #transaction_id# AND trans_agent.trans_agent_role = 'received by'
+    WHERE loan.transaction_id = 21120949 AND trans_agent.trans_agent_role = 'received by'
     ) borrowing_institution on loan.transaction_id = borrowing_institution.transaction_id
 LEFT JOIN
 (SELECT DISTINCT
@@ -46,7 +46,7 @@ LEFT JOIN
     LEFT JOIN trans_agent ON trans.transaction_id = trans_agent.transaction_id
     LEFT JOIN agent ON trans_agent.agent_id = agent.agent_id
     LEFT JOIN address ON agent.agent_id = address.agent_id
-    WHERE loan.transaction_id = #transaction_id# AND trans_agent.trans_agent_role = 'outside contact'
+    WHERE loan.transaction_id = 21120949 AND trans_agent.trans_agent_role = 'outside contact'
   ) outside_contact on loan.transaction_id = outside_contact.transaction_id
 LEFT JOIN
 (SELECT DISTINCT
@@ -63,7 +63,7 @@ LEFT JOIN
     LEFT JOIN agent ON trans_agent.agent_id = agent.agent_id
     LEFT JOIN address ON agent.agent_id = address.agent_id
 
-    WHERE loan.transaction_id = #transaction_id# AND trans_agent.trans_agent_role = 'in-house contact'
+    WHERE loan.transaction_id = 21120949 AND trans_agent.trans_agent_role = 'in-house contact'
   ) inside_contact on loan.transaction_id = inside_contact.transaction_id
 LEFT JOIN
 (SELECT DISTINCT
@@ -79,8 +79,8 @@ LEFT JOIN
     LEFT JOIN trans_agent ON trans.transaction_id = trans_agent.transaction_id
     LEFT JOIN agent ON trans_agent.agent_id = agent.agent_id
     LEFT JOIN address ON agent.agent_id = address.agent_id
-    WHERE loan.transaction_id = #transaction_id# AND trans_agent.trans_agent_role = 'authorized by'
+    WHERE loan.transaction_id = 21120949 AND trans_agent.trans_agent_role = 'authorized by'
   ) authorized_by on loan.transaction_id = authorized_by.transaction_id
 LEFT JOIN trans on loan.transaction_id = trans.transaction_id
 LEFT JOIN shipment on loan.transaction_id = shipment.transaction_id
-WHERE loan.transaction_id = #transaction_id#
+WHERE loan.transaction_id = 21120949

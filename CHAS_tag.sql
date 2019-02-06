@@ -1,4 +1,4 @@
---use for CHAS_tag_front.cfr and CHAS_tag_back.cfr
+--use for CHAS_tag_front.cfr and CHAS_tag_back.cfr and CHAS_label_vial.cfr
 SELECT
     scientific_name,
     cat_num,
@@ -59,7 +59,8 @@ SELECT
     DECODE(collection_id,'124','BOT-','130','ENTO-','126','FISH-','131','MALA-','113','MAM-','114','ORN-','115','OOL-','144','TEACH-') || cat_num formatted_cat_num,
     NVL(SUBSTR(identification_remarks, 0, INSTR(identification_remarks, '.')-1),identification_remarks) common_name,
     RELATEDCATALOGEDITEMS,
-    NVL(SUBSTR(RELATEDCATALOGEDITEMS, INSTR(RELATEDCATALOGEDITEMS, '/CHAS:')+6, 100), RELATEDCATALOGEDITEMS) relationships
+    NVL(SUBSTR(RELATEDCATALOGEDITEMS, INSTR(RELATEDCATALOGEDITEMS, '/CHAS:')+1, 100), RELATEDCATALOGEDITEMS) related_to,
+    NVL(SUBSTR(RELATEDCATALOGEDITEMS, INSTR(RELATEDCATALOGEDITEMS, '(')+1, INSTR(RELATEDCATALOGEDITEMS, ')')-2), RELATEDCATALOGEDITEMS) related_how
 
 FROM
     flat
