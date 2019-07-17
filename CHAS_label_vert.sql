@@ -67,4 +67,4 @@ FROM
 WHERE
     flat.collection_object_id IN (#collection_object_id#)
 ORDER BY
-    preparator_number
+    scientific_name, cat_num
