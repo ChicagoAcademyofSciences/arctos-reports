@@ -1,9 +1,9 @@
--- This is used in CHAS_label_vert
+-- This is used in CHAS_label_vert and CHAS_label_vertLongNames
 SELECT
   scientific_name,
   cat_num,
   ACCESSION,
-  higher_geog,
+  replace(higher_geog,'North America, United States, ','') higher_geog,
   SPEC_LOCALITY,
   VERBATIM_LOCALITY,
   COLLECTING_METHOD,
@@ -14,7 +14,7 @@ SELECT
   COLL_EVENT_REMARKS,
   round(dec_lat,5) dec_lat,
   round(dec_long,5) dec_long,
-  COLLECTORS,
+  COLLECTORS,  -- use this instead if you only want the first collector to show up: NVL(SUBSTR(COLLECTORS, 1, INSTR(COLLECTORS, ',')-1), collectors) collectors,
   decode(trim(flat.sex),
     'male','M',
     'female','F',
@@ -38,7 +38,7 @@ SELECT
   DECODE(collection_id,'124','BOT-','130','ENTO-','126','FISH-','131','MALA-','113','MAM-','114','ORN-','115','OOL-','144','TEACH-', '154', 'HERP-') || cat_num formatted_cat_num,
   NVL(SUBSTR(identification_remarks, 0, INSTR(identification_remarks, '.')-1),identification_remarks) common_name,
   RELATEDCATALOGEDITEMS,
-  NVL(SUBSTR(RELATEDCATALOGEDITEMS, INSTR(RELATEDCATALOGEDITEMS, '/CHAS:')+1, 100), RELATEDCATALOGEDITEMS) related_to,
+  NVL(SUBSTR(RELATEDCATALOGEDITEMS, INSTR(RELATEDCATALOGEDITEMS, ')')+1, 100), RELATEDCATALOGEDITEMS) related_to,
   NVL(SUBSTR(RELATEDCATALOGEDITEMS, INSTR(RELATEDCATALOGEDITEMS, '(')+1, INSTR(RELATEDCATALOGEDITEMS, ')')-2), RELATEDCATALOGEDITEMS) related_how,
   parts_distinct
 
